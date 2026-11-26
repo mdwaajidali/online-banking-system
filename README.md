@@ -139,18 +139,42 @@ duplicate-submit protection and access control.
    ```
 3. `npm run dev`. Demo data is loaded if the database is empty.
 
-## Deploying
+## Deploying (free: Render + MongoDB Atlas)
 
-```bash
-npm run build   # builds the React app into client/dist
-NODE_ENV=production npm start
-```
+GitHub Pages can only host static files, so the app runs on **Render**, which deploys from this
+GitHub repo and redeploys on every push. In production one Express server serves both the website
+and the API from the same HTTPS address. It refuses to start without `MONGO_URI` and a strong
+`JWT_SECRET`.
 
-In production the Express server serves the built website and the API from the same address.
-It refuses to start without `MONGO_URI` and a strong `JWT_SECRET`, and cookies are marked `Secure`
-(HTTPS only). On Render or Railway, set the build command to `npm run install:all && npm run build`
-and the start command to `npm start`, with `NODE_ENV=production`, `MONGO_URI` and `JWT_SECRET`
-as environment variables.
+**1. Database (MongoDB Atlas)**
+1. Create a free **M0** cluster at mongodb.com/atlas.
+2. *Database Access*: add a database user with a password.
+3. *Network Access*: allow `0.0.0.0/0` (Render's free tier has no fixed IP address).
+4. *Connect → Drivers*: copy the connection string and add `/bank` before the `?`:
+   `mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/bank?retryWrites=true&w=majority`
+
+**2. Load demo data (optional, from your computer)**
+Put that string in `server/.env` as `MONGO_URI=...` and run `npm run seed`.
+Then sign in to the live site as the admin and **change the admin password** under Profile.
+
+**3. Web service (Render)**
+1. render.com → sign in with GitHub → **New → Web Service** → pick this repo.
+2. Settings:
+   | Field | Value |
+   |---|---|
+   | Build command | `npm run install:all && npm run build` |
+   | Start command | `npm start` |
+   | Instance type | Free |
+3. Environment variables:
+   | Key | Value |
+   |---|---|
+   | `NODE_ENV` | `production` |
+   | `MONGO_URI` | your Atlas connection string |
+   | `JWT_SECRET` | a long random string (Render's "Generate" button works) |
+4. **Create Web Service**. After a few minutes the site is live at `https://<name>.onrender.com`.
+
+On the free plan the service sleeps after 15 minutes without visitors, so the first visit after that
+takes about a minute to load.
 
 ## Ideas to extend it
 
