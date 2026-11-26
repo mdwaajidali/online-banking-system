@@ -1,3 +1,4 @@
+import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import { dateTime, describeTx, money } from '../lib/format.js';
 
 export function TxList({ items, showBalance = false }) {
@@ -6,7 +7,7 @@ export function TxList({ items, showBalance = false }) {
       {items.map((t) => (
         <li key={t.id} className="tx">
           <span className={`tx-icon ${t.direction}`} aria-hidden="true">
-            {t.direction === 'credit' ? '↓' : '↑'}
+            {t.direction === 'credit' ? <ArrowDownLeft size={18} strokeWidth={1.75} /> : <ArrowUpRight size={18} strokeWidth={1.75} />}
           </span>
           <div className="tx-main">
             <span className="tx-title">{describeTx(t)}</span>

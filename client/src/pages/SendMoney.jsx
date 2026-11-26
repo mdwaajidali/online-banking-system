@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api.js';
@@ -127,7 +128,7 @@ export default function SendMoney() {
       <div className="narrow">
         <div className="card success-card" role="status">
           <div className="success-icon" aria-hidden="true">
-            ✓
+            <Check size={32} strokeWidth={2} />
           </div>
           <h1>Money sent</h1>
           <p className="big-amount">{money(receipt.amount)}</p>
@@ -252,7 +253,7 @@ export default function SendMoney() {
                 {lookup.state === 'loading' ? <p className="lookup">Checking account…</p> : null}
                 {lookup.state === 'ok' && recipient ? (
                   <p className="lookup lookup-ok">
-                    ✓ Account holder: <strong>{recipient.name}</strong>
+                    <Check size={16} strokeWidth={2} aria-hidden="true" /> Account holder: <strong>{recipient.name}</strong>
                     {recipient.own ? ' (this is your own account)' : ''}
                   </p>
                 ) : null}

@@ -1,3 +1,4 @@
+import { Check, Circle } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth.jsx';
@@ -17,7 +18,7 @@ export function PasswordChecklist({ value }) {
     <ul className="checklist" aria-label="Password rules">
       {passwordChecks(value).map(([label, ok]) => (
         <li key={label} className={ok ? 'ok' : ''}>
-          <span aria-hidden="true">{ok ? '✓' : '○'}</span> {label}
+          {ok ? <Check size={16} strokeWidth={2} aria-hidden="true" /> : <Circle size={16} strokeWidth={1.75} aria-hidden="true" />} {label}
         </li>
       ))}
     </ul>

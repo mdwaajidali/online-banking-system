@@ -1,3 +1,4 @@
+import { X } from 'lucide-react';
 import { useEffect, useId, useRef, useState } from 'react';
 
 export function Field({ label, hint, error, children, id }) {
@@ -78,7 +79,7 @@ export function Modal({ title, onClose, children }) {
         <h2>{title}</h2>
         {onClose ? (
           <button className="icon-btn" onClick={onClose} aria-label="Close">
-            ✕
+            <X size={20} strokeWidth={1.75} aria-hidden="true" />
           </button>
         ) : null}
       </div>

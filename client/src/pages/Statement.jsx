@@ -1,3 +1,4 @@
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../lib/api.js';
@@ -90,7 +91,7 @@ export default function Statement() {
     <>
       {params.number ? (
         <p>
-          <Link to="/admin">← Back to customers</Link>
+          <Link to="/admin" className="back-link"><ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" /> Back to customers</Link>
         </p>
       ) : null}
       <div className="section-head">
@@ -168,13 +169,13 @@ export default function Statement() {
       {data && data.pages > 1 ? (
         <nav className="pager" aria-label="Pages">
           <Button variant="ghost" disabled={page <= 1} onClick={() => setPage(page - 1)}>
-            ← Newer
+            <ChevronLeft size={18} strokeWidth={1.75} aria-hidden="true" /> Newer
           </Button>
           <span>
             Page {page} of {data.pages}
           </span>
           <Button variant="ghost" disabled={page >= data.pages} onClick={() => setPage(page + 1)}>
-            Older →
+            Older <ChevronRight size={18} strokeWidth={1.75} aria-hidden="true" />
           </Button>
         </nav>
       ) : null}

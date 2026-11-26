@@ -1,14 +1,16 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { FileText, Home, Landmark, LogOut, ScrollText, Send, User, Users } from 'lucide-react';
 import { useAuth } from '../lib/auth.jsx';
 import { IdleTimeout } from './IdleTimeout.jsx';
+
+const ICON = { size: 18, strokeWidth: 1.75, 'aria-hidden': true };
 
 export function Logo() {
   return (
     <span className="logo">
-      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
-        <rect width="32" height="32" rx="8" fill="currentColor" />
-        <path d="M8 13h16L16 7zM9 14h3v8H9zm5.5 0h3v8h-3zM20 14h3v8h-3zM8 23h16v2H8z" fill="var(--bg)" />
-      </svg>
+      <span className="logo-mark">
+        <Landmark size={18} strokeWidth={2} aria-hidden="true" />
+      </span>
       Kosh Bank
     </span>
   );
@@ -19,15 +21,15 @@ export default function Layout() {
   const links =
     user.role === 'admin'
       ? [
-          ['/admin', 'Customers'],
-          ['/admin/activity', 'Activity log'],
-          ['/profile', 'Profile'],
+          ['/admin', 'Customers', Users],
+          ['/admin/activity', 'Activity log', ScrollText],
+          ['/profile', 'Profile', User],
         ]
       : [
-          ['/', 'Home'],
-          ['/send', 'Send money'],
-          ['/statement', 'Statement'],
-          ['/profile', 'Profile'],
+          ['/', 'Home', Home],
+          ['/send', 'Send money', Send],
+          ['/statement', 'Statement', FileText],
+          ['/profile', 'Profile', User],
         ];
 
   return (
@@ -39,8 +41,9 @@ export default function Layout() {
         <div className="topbar-inner">
           <Logo />
           <nav aria-label="Main">
-            {links.map(([to, label]) => (
+            {links.map(([to, label, Icon]) => (
               <NavLink key={to} to={to} end>
+                <Icon {...ICON} />
                 {label}
               </NavLink>
             ))}
@@ -48,6 +51,7 @@ export default function Layout() {
           <div className="topbar-user">
             <span className="who">{user.name}</span>
             <button className="btn btn-ghost btn-sm" onClick={() => logout('You have signed out safely.')}>
+              <LogOut size={16} strokeWidth={1.75} aria-hidden="true" />
               Sign out
             </button>
           </div>

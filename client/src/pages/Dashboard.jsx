@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../lib/auth.jsx';
+import { Eye, EyeOff, FileText, Plus, Send } from 'lucide-react';
 import { useApi } from '../lib/useApi.js';
 import { groupDigits, money } from '../lib/format.js';
 import { Alert, CopyButton, EmptyState, Loading } from '../components/ui.jsx';
@@ -14,13 +14,11 @@ function readHidden() {
   }
 }
 
-function greeting() {
-  const h = new Date().getHours();
-  return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+function today() {
+  return new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 export default function Dashboard() {
-  const { user } = useAuth();
   const accounts = useApi('/accounts');
   const recent = useApi('/transactions/recent');
   const [hidden, setHidden] = useState(readHidden);
@@ -46,28 +44,47 @@ export default function Dashboard() {
 
   return (
     <>
-      <section className="hero">
+      <div className="page-head">
         <div>
-          <p className="muted">
-            {greeting()}, {user.name.split(' ')[0]}
-          </p>
-          <p className="hero-label">Total balance</p>
-          <p className="hero-amount">{show(total)}</p>
-          <button className="link-btn" onClick={toggleHidden} aria-pressed={hidden}>
-            {hidden ? 'Show balances' : 'Hide balances'}
-          </button>
+          <h1>Overview</h1>
+          <p className="muted">{today()}</p>
         </div>
-        <div className="hero-actions">
-          <Link to="/send" className="btn btn-primary btn-lg">
+      </div>
+
+      <section className="card summary" aria-label="Total balance">
+        <div>
+          <p className="summary-label">
+            Total balance
+            <button className="icon-btn icon-btn-sm" onClick={toggleHidden} aria-pressed={hidden} aria-label={hidden ? 'Show balances' : 'Hide balances'} title={hidden ? 'Show balances' : 'Hide balances'}>
+              {hidden ? <Eye size={18} strokeWidth={1.75} /> : <EyeOff size={18} strokeWidth={1.75} />}
+            </button>
+          </p>
+          <p className="summary-amount">{show(total)}</p>
+          <p className="muted small">
+            Across {list.length} {list.length === 1 ? 'account' : 'accounts'}
+          </p>
+        </div>
+        <div className="row-actions">
+          <Link to="/send" className="btn btn-primary">
+            <Send size={18} strokeWidth={1.75} aria-hidden="true" />
             Send money
           </Link>
-          <Link to="/statement" className="btn btn-secondary btn-lg">
-            View statement
+          <Link to="/statement" className="btn btn-ghost">
+            <FileText size={18} strokeWidth={1.75} aria-hidden="true" />
+            Statement
           </Link>
         </div>
       </section>
 
-      <h2 className="section-title">Your accounts</h2>
+      <div className="section-head">
+        <h2>Your accounts</h2>
+        {list.length < 3 ? (
+          <Link to="/profile#open-account" className="btn btn-ghost btn-sm">
+            <Plus size={16} strokeWidth={1.75} aria-hidden="true" />
+            Open another account
+          </Link>
+        ) : null}
+      </div>
       <div className="account-grid">
         {list.map((a) => (
           <article key={a.id} className="account-card">
@@ -84,11 +101,6 @@ export default function Dashboard() {
             ) : null}
           </article>
         ))}
-        {list.length < 3 ? (
-          <Link to="/profile#open-account" className="account-card account-add">
-            + Open another account
-          </Link>
-        ) : null}
       </div>
 
       <div className="limit">
@@ -104,7 +116,7 @@ export default function Dashboard() {
       </div>
 
       <div className="section-head">
-        <h2 className="section-title">Recent activity</h2>
+        <h2>Recent activity</h2>
         <Link to="/statement">See all</Link>
       </div>
       <div className="card">
